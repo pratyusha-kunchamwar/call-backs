@@ -27,8 +27,8 @@ function createJsonFiles(dir, numFiles) {
         console.error("Error while writing data into file");
         console.log(error);
       } else {
-        nofWrittenFiles++;
-      } //to control on write files  because it is asynchronous in nature
+        nofWrittenFiles++; //to control on write files  because it is asynchronous in nature
+      } 
       if (numFiles === nofWrittenFiles) {
         console.log("Data wrote into allThe files Successfully");
         deleteFiles(dir);

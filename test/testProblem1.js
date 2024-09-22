@@ -1,4 +1,4 @@
-const { makeDir } = require('../call backs/problem1.js');
+const { makeDir } = require('../problem1.js');
 
 let absolutePath = "Hello";
 let numberOfFiles = 2;
