@@ -1,2 +1,4 @@
-const { readFile } = require('../call backs/problem2.js');
-readFile('lipsum.txt');
+const { readFile } = require('../problem2.js');
+let currentPath = __dirname;
+let fileName = 'lipsum.txt';
+readFile(fileName,currentPath);
