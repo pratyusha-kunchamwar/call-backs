@@ -1,22 +1,20 @@
 const fs = require("fs");
 const path = require("path");
-let mainFile = "filenames.txt";
-let namePath = path.join("/home/pratyusha/mount/call backs/test", mainFile);
-//Reading The file
-function readFile(file) {
-  let filePath = path.join("/home/pratyusha/mount/call backs/test", file);
+
+function readFile(file, currentPath) {
+  let filePath = path.join(currentPath, file);
   fs.readFile(filePath, "utf8", (error, data) => {
     if (error) {
       console.error("Error while reading file", error);
     } else {
       console.log("File content:", data);
-      contentToUpperCase(data, file);
+      contentToUpperCase(data, currentPath);
     }
   });
 }
 //creating the files
-function createNewFile(file, content) {
-  const filepath = path.join("/home/pratyusha/mount/call backs/test", file);
+function createNewFile(file, content, currentPath) {
+  const filepath = path.join(currentPath, file);
   fs.writeFile(filepath, content, (error) => {
     if (error) {
       console.error("Error while creating File");
@@ -27,16 +25,19 @@ function createNewFile(file, content) {
   });
 }
 // content to upper case
-function contentToUpperCase(data, file) {
+function contentToUpperCase(data, currentPath) {
   let dataToUpperCase = data.toUpperCase();
   let newFile = "file1.txt";
-  createNewFile(newFile, dataToUpperCase);
-  storeData(newFile);
-  contentToLowerCase(file);
+  let mainFile = "fileName.txt";
+  createNewFile(newFile, dataToUpperCase, currentPath);
+  createNewFile(mainFile, "", currentPath);   //filenames.txt file creating
+  let mainFilePath = path.join(currentPath, mainFile);
+  storeData(newFile, mainFilePath);
+  contentToLowerCase(newFile, currentPath, mainFilePath);
 }
 //store data into filename .txt
-function storeData(file) {
-  fs.appendFile(namePath, file + "\n", (error) => {
+function storeData(content, mainFilePath) {
+  fs.appendFile(mainFilePath, content + "\n", (error) => {
     if (error) {
       console.log(error);
       return;
@@ -47,8 +48,8 @@ function storeData(file) {
 }
 
 //toLower case
-function contentToLowerCase(file) {
-  let filePath = path.join("/home/pratyusha/mount/call backs/test", file);
+function contentToLowerCase(file, currentPath, mainFilePath) {
+  let filePath = path.join(currentPath, file);
   fs.readFile(filePath, "utf8", (error, data) => {
     if (error) {
       console.error("Error while reading file", error);
@@ -60,15 +61,16 @@ function contentToLowerCase(file) {
         .filter(Boolean);
       let content = sentences.join(".  ");
       let newFile = "file2.txt";
-      createNewFile(newFile, content);
-      storeData(newFile);
-      sortTheContent(newFile);
+      createNewFile(newFile, content, currentPath);
+
+      storeData(newFile, mainFilePath);
+      sortTheContent(newFile, currentPath, mainFilePath);
     }
   });
 }
 
 //sort the content
-function sortTheContent(file) {
+function sortTheContent(file,currentPath,mainFilePath) {
   fs.readFile(file, "utf8", (error, data) => {
     if (error) {
       console.error(error);
@@ -79,15 +81,15 @@ function sortTheContent(file) {
         .filter(Boolean);
       let sortedContent = sentences.sort().join(". ");
       let newFile = "file3.txt";
-      createNewFile(newFile, sortedContent);
-      storeData(newFile);
-      deleteFiles(mainFile);
+      createNewFile(newFile, sortedContent,currentPath);
+      storeData(newFile,mainFilePath);
+      deleteFiles(mainFilePath,currentPath);
     }
   });
 }
 //to delete the files
-function deleteFiles(mainFileFile) {
-  fs.readFile(mainFileFile, "utf8", (error, data) => {
+function deleteFiles(mainFilePath,currentPath) {
+  fs.readFile(mainFilePath, "utf8", (error, data) => {
     if (error) {
       console.log(error);
     } else {
@@ -96,7 +98,7 @@ function deleteFiles(mainFileFile) {
         .map((file) => file.trim())
         .filter(Boolean);
       filenameData.forEach((file) => {
-        let filepath = path.join("/home/pratyusha/mount/call backs/test", file);
+        let filepath = path.join(currentPath, file);
         fs.unlink(filepath, (error) => {
           if (error) {
             console.error("Error while deleting the files");
