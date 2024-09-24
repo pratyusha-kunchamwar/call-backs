@@ -28,7 +28,7 @@ function readFile(filePath) {
   });
 }
 
-//content to lowerCase
+//content data to UpperCase
 function contentToUpperCase(data) {
   return new Promise((resolve, reject) => {
     let upperCaseData = data.toUpperCase();
@@ -55,10 +55,8 @@ function contentToLowerCase(newFile, mainFilePath) {
         let newFile = "file2.txt";
 
         createNewFile(newFile, sentences) //create files
-          .then(() => {
-            appendToFile(mainFilePath, newFile + "\n");
-            resolve({ newFile, mainFilePath });
-          })
+          .then(() => appendToFile(mainFilePath, newFile + "\n"))
+          .then(() => resolve({ newFile, mainFilePath }))
           .catch(() => reject("Error from create file in lowerCase"));
       })
       .catch(() => {
@@ -77,10 +75,8 @@ function sortTheContent(newFile, mainFilePath) {
         let sortedData = data.split(" ").sort().filter(Boolean).join(" ");
         let newFile = "file3.txt";
         createNewFile(newFile, sortedData)
-          .then(() => {
-            appendToFile(mainFilePath, newFile + "\n");
-            resolve({ newFile, mainFilePath });
-          })
+          .then(() => appendToFile(mainFilePath, newFile + "\n"))
+          .then(() => resolve(mainFilePath))
           .catch(() => reject("Error in create file in sortContent"));
       })
       .catch(() => reject("Error in read file sortContent"));
@@ -96,15 +92,16 @@ function deleteFiles(mainFilePath) {
 
         const deletionFiles = fileNames.map((file) => {
           const filePath = path.join(__dirname, file);
-          return new Promise((delResolve, delReject) => {
+          let task = new Promise((deleteResolve, deleteReject) => {
             fs.unlink(filePath, (error) => {
               if (error) {
-                delReject(error);
+                deleteReject(error);
               } else {
-                delResolve();
+                deleteResolve();
               }
             });
           });
+          return task;
         });
         Promise.all(deletionFiles)
           .then(() => resolve("All files deleted successfully"))
@@ -140,7 +137,7 @@ function appendToFile(filePath, content) {
     });
   });
 }
-//exporing thw things
+//exporting the functions
 export {
   readFile,
   contentToUpperCase,
