@@ -1,0 +1,13 @@
+{
+  "name": "asy-await-callbacks",
+  "version": "1.0.0",
+  "main": "problem11.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Pratyusha",
+  "license": "ISC",
+  "description": ""
+}
