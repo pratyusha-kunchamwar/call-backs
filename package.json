@@ -1,0 +1,16 @@
+{
+  "name": "usingthen",
+  "version": "1.0.0",
+  "main": "practice.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
