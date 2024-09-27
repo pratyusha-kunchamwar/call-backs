@@ -1,5 +1,6 @@
-const { makeDir } = require('../problem1.js');
+const  makeDirectory = require('../problem1.js');
 
-let absolutePath = "Hello";
+
+let absolutePath = "jsonFiles";
 let numberOfFiles = 2;
-makeDir(absolutePath, numberOfFiles);
+makeDirectory(absolutePath, numberOfFiles);

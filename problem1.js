@@ -1,8 +1,8 @@
-const { error } = require("console");
 const fs = require("fs");
 const path = require("path");
 
-function makeDir(dir, numberOfFiles) {
+//make directory
+function makeDirectory(dir, numberOfFiles) {
   fs.mkdir(dir, (error) => {
     if (error) {
       console.error("Error while Creating Directory");
@@ -14,10 +14,9 @@ function makeDir(dir, numberOfFiles) {
   });
 }
 
-//for creating json files
+//creating json files
 function createJsonFiles(dir, numFiles) {
-  let nofWrittenFiles = 0;
-  for (let file = 0; file < numFiles; file++) {
+  for (let file = 0; file <= numFiles; file++) {
     let filePath = path.join(dir, `file${file}.json`);
     const data = {
       name: `The is ${file} file `,
@@ -27,11 +26,11 @@ function createJsonFiles(dir, numFiles) {
         console.error("Error while writing data into file");
         console.log(error);
       } else {
-        nofWrittenFiles++; //to control on write files  because it is asynchronous in nature
-      } 
-      if (numFiles === nofWrittenFiles) {
-        console.log("Data wrote into allThe files Successfully");
-        deleteFiles(dir);
+        //to control on write files  because it is asynchronous in nature
+        if (numFiles === file) {
+          console.log("Data wrote into allThe files Successfully");
+          deleteFiles(dir);
+        }
       }
     });
   }
@@ -39,35 +38,36 @@ function createJsonFiles(dir, numFiles) {
 
 //for files deleting
 function deleteFiles(dir) {
-  fs.readdir(dir, (error, files) => {
+  fs.readdir(dir, (error, filesList) => {
+    //directory reading
     if (error) {
       console.error("Error while deleting the files");
       console.log(error);
     } else {
-      if (files.length === 0) {
+      if (filesList.length === 0) {
         console.log("No files Exist in the directory");
-      } else {
-        let fileDeleted = 0;
-        files.forEach((file) => {
-          const filePath = path.join(dir, file);
-
-          fs.unlink(filePath, (error) => {
-            if (error) {
-              console.error("Error while deleting the files");
-              console.log(error);
-            }
-            else {
-              fileDeleted++;
-            }
-
-            if (fileDeleted === files.length) {
-              console.log("All the files are deleted");
-              return;
-            }
-          });
-        });
+        return;
       }
+      let deletedFilesCount = 0;
+
+      filesList.forEach((file) => {
+        const filePath = path.join(dir, file);
+
+        fs.unlink(filePath, (error) => {
+          //for files deleting
+          if (error) {
+            console.error(`Error while deleting the file${file}`);
+            console.log(error);
+          } else {
+            deletedFilesCount++;
+            //to control on delete files  because it is asynchronous in nature
+            if (deletedFilesCount === filesList.length) {
+              console.log("All the files are deleted");
+            }
+          }
+        });
+      });
     }
   });
 }
-module.exports = { createJsonFiles, deleteFiles, makeDir };
+module.exports = makeDirectory;

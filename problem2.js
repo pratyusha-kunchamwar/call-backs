@@ -1,17 +1,18 @@
 const fs = require("fs");
 const path = require("path");
 
+//to read file
 function readFile(file, currentPath) {
   let filePath = path.join(currentPath, file);
   fs.readFile(filePath, "utf8", (error, data) => {
     if (error) {
       console.error("Error while reading file", error);
     } else {
-      console.log("File content:", data);
       contentToUpperCase(data, currentPath);
     }
   });
 }
+
 //creating the files
 function createNewFile(file, content, currentPath) {
   const filepath = path.join(currentPath, file);
@@ -29,12 +30,14 @@ function contentToUpperCase(data, currentPath) {
   let dataToUpperCase = data.toUpperCase();
   let newFile = "file1.txt";
   let mainFile = "fileName.txt";
+
   createNewFile(newFile, dataToUpperCase, currentPath);
-  createNewFile(mainFile, "", currentPath);   //filenames.txt file creating
+  createNewFile(mainFile, "", currentPath); //filenames.txt file creating
   let mainFilePath = path.join(currentPath, mainFile);
   storeData(newFile, mainFilePath);
   contentToLowerCase(newFile, currentPath, mainFilePath);
 }
+
 //store data into filename .txt
 function storeData(content, mainFilePath) {
   fs.appendFile(mainFilePath, content + "\n", (error) => {
@@ -47,7 +50,7 @@ function storeData(content, mainFilePath) {
   });
 }
 
-//toLower case
+//content to Lower case
 function contentToLowerCase(file, currentPath, mainFilePath) {
   let filePath = path.join(currentPath, file);
   fs.readFile(filePath, "utf8", (error, data) => {
@@ -59,10 +62,10 @@ function contentToLowerCase(file, currentPath, mainFilePath) {
         .split(" ")
         .map((s) => s.trim())
         .filter(Boolean);
-      let content = sentences.join(".  ");
+      let content = sentences.join(".");
       let newFile = "file2.txt";
-      createNewFile(newFile, content, currentPath);
 
+      createNewFile(newFile, content, currentPath);
       storeData(newFile, mainFilePath);
       sortTheContent(newFile, currentPath, mainFilePath);
     }
@@ -70,7 +73,7 @@ function contentToLowerCase(file, currentPath, mainFilePath) {
 }
 
 //sort the content
-function sortTheContent(file,currentPath,mainFilePath) {
+function sortTheContent(file, currentPath, mainFilePath) {
   fs.readFile(file, "utf8", (error, data) => {
     if (error) {
       console.error(error);
@@ -81,14 +84,16 @@ function sortTheContent(file,currentPath,mainFilePath) {
         .filter(Boolean);
       let sortedContent = sentences.sort().join(". ");
       let newFile = "file3.txt";
-      createNewFile(newFile, sortedContent,currentPath);
-      storeData(newFile,mainFilePath);
-      deleteFiles(mainFilePath,currentPath);
+
+      createNewFile(newFile, sortedContent, currentPath);
+      storeData(newFile, mainFilePath);
+      deleteFiles(mainFilePath, currentPath);
     }
   });
 }
+
 //to delete the files
-function deleteFiles(mainFilePath,currentPath) {
+function deleteFiles(mainFilePath, currentPath) {
   fs.readFile(mainFilePath, "utf8", (error, data) => {
     if (error) {
       console.log(error);
@@ -97,6 +102,7 @@ function deleteFiles(mainFilePath,currentPath) {
         .split("\n")
         .map((file) => file.trim())
         .filter(Boolean);
+
       filenameData.forEach((file) => {
         let filepath = path.join(currentPath, file);
         fs.unlink(filepath, (error) => {
@@ -107,6 +113,7 @@ function deleteFiles(mainFilePath,currentPath) {
           }
         });
       });
+      
     }
   });
 }
