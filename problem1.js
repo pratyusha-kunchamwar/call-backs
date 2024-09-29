@@ -6,58 +6,61 @@
         2. Delete those files simultaneously 
 */
 
-
 import fs from "fs/promises";
 import path from "path";
-function makeDirectory(directoryPath, numberOfFiles) {
-  fs.mkdir(directoryPath, { recursive: true })
+
+function makeDirectory(directoryPath) {
+  return fs
+    .mkdir(directoryPath, { recursive: true })
     .then(() => {
-      console.log("Directory created");
-      createJsonFiles(directoryPath, numberOfFiles);
+      return directoryPath;
     })
-    .catch((error) => console.error("Error while creating dir", error));
+    .catch((error) => console.error("Error while creating directory", error));
 }
 
 //for create json files
 function createJsonFiles(directoryPath, numberOfFiles) {
-  let promisesOfCreatedFiles = [];
+  let createdFiles = [];
   for (let count = 0; count < numberOfFiles; count++) {
     let filePath = path.join(directoryPath, `file${count}.json`);
-    promisesOfCreatedFiles.push(
-      fs.writeFile(filePath, "These are json files")
+    createdFiles.push(
+      fs
+        .writeFile(filePath, "These are json files")
         .then(() => {
           console.log(`file${count} created`);
         })
-        .catch((error) => console.error("error while creating the file", error))
+        .catch((error) => console.error("Error in creating the file", error))
     );
   }
-//api to check all the promises resolve
-  Promise.all(promisesOfCreatedFiles)
-    .then(() => deleteFiles(directoryPath))
+  //api to check all the promises resolve
+  return Promise.all(createdFiles)
+    .then(() => {
+      return directoryPath;
+    })
     .catch((error) =>
-      console.error("some of the file creation is unsuccessful", error)
+      console.error("Error while creating all the files", error)
     );
 }
 
 //for deleting the Files
 function deleteFiles(directoryPath) {
-  fs.readdir(directoryPath)
+  return fs
+    .readdir(directoryPath)
     .then((files) => {
       let deletedFiles = files.map((file) => {
         let filePath = path.join(directoryPath, file);
-       return fs.unlink(filePath)
-          .then(() => console.log("file deleted"))
+        return fs
+          .unlink(filePath)
+          .then(() => console.log(`${file} deleted`))
           .catch((error) => console.error("Error in deleting the file", error));
       });
-//api to check all promises resolve
-      Promise.all(deletedFiles)
-        .then(() => console.log("All files deleted"))
-        .catch((error) => console.log("Error while deleting the files", error));
+      //api to check all promises resolve
+      return Promise.all(deletedFiles);
+    })
+    .then(() => {
+      console.log("---All the files are deleted---");
     })
     .catch((error) => console.error("Error while reading the files", error));
 }
 
-
-export default makeDirectory;
-
-
+export { makeDirectory, createJsonFiles, deleteFiles };

@@ -9,20 +9,19 @@
         5. Read the contents of filenames.txt and delete all the new files that are mentioned in that list simultaneously.
 */
 
-
 import fs from "fs/promises";
-import path from "path";
+import path, { resolve } from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default function readGivenFile(filePath) {
+function readGivenFile(filePath) {
   return fs
     .readFile(filePath, "utf-8")
     .then((data) => {
       console.log("File reading Done Successfully");
-      contentToUpperCase(data);
+      return data;
     })
     .catch((error) =>
       console.error("Error while creating the directory", error)
@@ -32,48 +31,61 @@ export default function readGivenFile(filePath) {
 //uppercase content
 function contentToUpperCase(data) {
   let uppercaseData = data.toUpperCase();
-  let newFile = "file1.txt";
+  let uppercaseDataFile = "upperCaseData.txt";
   let mainFile = "fileNames.txt";
   let mainFilePath = path.join(__dirname, mainFile);
-  createNewFiles(newFile, uppercaseData)
-    .then(() => appendTheFile(mainFilePath, newFile + "\n"))
-    .then(() => contentToLowerCase(newFile, mainFilePath))
+
+  return createNewFiles(uppercaseDataFile, uppercaseData)
+    .then(() => {
+      return appendTheFile(mainFilePath, uppercaseDataFile + "\n");
+    })
+    .then(() => {
+      return { uppercaseDataFile, mainFilePath };
+    })
     .catch((error) => console.error("Error in content to uppercase", error));
 }
 
 //content to lower case
-function contentToLowerCase(fileName, mainFilePath) {
-  let filePath = path.join(__dirname, fileName);
-  fs.readFile(filePath, "utf-8")
+function contentToLowerCase(uppercaseDataFile, mainFilePath) {
+  let filePath = path.join(__dirname, uppercaseDataFile);
+
+  return readGivenFile(filePath)
     .then((data) => {
       let lowercaseData = data
         .toLowerCase()
         .split(".")
+        .map((data) => data.trim())
         .filter(Boolean)
-        .join(".\n");
-      let newFile = "file2.txt";
+        .join(".");
 
-      createNewFiles(newFile, lowercaseData)
-        .then(() => appendTheFile(mainFilePath, newFile + "\n"))
-        .then(() => sortedContent(newFile, mainFilePath))
-        .catch((error) =>
-          console.error("Error in content to lowercase", error)
-        );
+      let lowercaseDataFile = "lowerCaseData.txt";
+
+      return createNewFiles(lowercaseDataFile, lowercaseData)
+        .then(() => {
+          return appendTheFile(mainFilePath, lowercaseDataFile + "\n");
+        })
+        .then(() => {
+          return { lowercaseDataFile, mainFilePath };
+        });
     })
     .catch((error) => console.error("Error while reading the file", error));
 }
 
 //sorted content
-function sortedContent(fileName, mainFilePath) {
-  let filePath = path.join(__dirname, fileName);
-  fs.readFile(filePath, "utf-8")
+function sortedContent(lowercaseDataFile, mainFilePath) {
+  let filePath = path.join(__dirname, lowercaseDataFile);
+  return readGivenFile(filePath)
     .then((data) => {
-      let sortedData = data.split(" ").sort().filter(Boolean).join(" ");
-      let newFile = "file3.txt";
+      let sortedData = data.split(".").sort().filter(Boolean).join(".");
+      let sortedDataFile = "sortedData.txt";
 
-      createNewFiles(newFile, sortedData)
-        .then(() => appendTheFile(mainFilePath, newFile + "\n"))
-        .then(() => deleteTheFile(mainFilePath))
+      return createNewFiles(sortedDataFile, sortedData)
+        .then(() => {
+          return appendTheFile(mainFilePath, sortedDataFile + "\n");
+        })
+        .then(() => {
+          return mainFilePath;
+        })
         .catch((error) => console.error("Error in sorted Content", error));
     })
     .catch((error) => console.error("Error while Reading the file", error));
@@ -81,19 +93,19 @@ function sortedContent(fileName, mainFilePath) {
 
 //delete the files
 function deleteTheFile(mainFilePath) {
-  fs.readFile(mainFilePath, "utf-8")
+  return readGivenFile(mainFilePath)
     .then((data) => {
       let fileName = data.split("\n").filter(Boolean);
       let deletedFiles = fileName.map((file) => {
         let filepath = path.join(__dirname, file);
         return fs
           .unlink(filepath)
-          .then(() => console.log(`deleted${file}`))
+          .then(() => console.log(`deleted  ${file}`))
           .catch((error) => console.error("Error deleting ${file}", error));
       });
 
-      //to resolve all the promises at a time
-      Promise.all(deletedFiles)
+      // to resolve all the promises at a time
+      return Promise.all(deletedFiles)
         .then(() => console.log("All the files deleted"))
         .catch((error) =>
           console.error("Error while deleting all the files", error)
@@ -115,6 +127,14 @@ function createNewFiles(filename, content) {
 function appendTheFile(mainFilePath, content) {
   return fs
     .appendFile(mainFilePath, content)
-    .then(() => console.log("Data appended to the file"))
+    .then(() => console.log("FileName store in fileNames.txt"))
     .catch((error) => console.log("Error while appending the code", error));
 }
+
+export {
+  readGivenFile,
+  contentToLowerCase,
+  contentToUpperCase,
+  deleteTheFile,
+  sortedContent,
+};
