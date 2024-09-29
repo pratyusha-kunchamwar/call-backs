@@ -1,0 +1,10 @@
+a
+z
+b
+y
+c
+f
+d
+n
+e
+Hi I am Pratyusha,Learning js.  And working as Inter.
