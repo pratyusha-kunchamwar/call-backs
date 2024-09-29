@@ -2,34 +2,32 @@ const fs = require("fs");
 const path = require("path");
 
 //make directory
-function makeDirectory(dir, numberOfFiles) {
-  fs.mkdir(dir, (error) => {
+function makeDirectory(directory, callback) {
+  fs.mkdir(directory, { recursive: true }, (error) => {
     if (error) {
-      console.error("Error while Creating Directory");
-      console.log(error);
+      callback("Error while Creating Directory", error.message);
     } else {
-      console.log("Directory created successfully");
-      createJsonFiles(dir, numberOfFiles);
+      callback(null, directory);
     }
   });
 }
 
 //creating json files
-function createJsonFiles(dir, numFiles) {
-  for (let file = 0; file <= numFiles; file++) {
-    let filePath = path.join(dir, `file${file}.json`);
+function createJsonFiles(directory, numFiles, callback) {
+  let filesCreated = 0;
+  for (let file = 0; file < numFiles; file++) {
+    let filePath = path.join(directory, `file${file}.json`);
     const data = {
       name: `The is ${file} file `,
     };
     fs.writeFile(filePath, JSON.stringify(data), (error) => {
       if (error) {
-        console.error("Error while writing data into file");
-        console.log(error);
+        callback("Error while writing data into file", error.message);
       } else {
+        filesCreated++;
         //to control on write files  because it is asynchronous in nature
-        if (numFiles === file) {
-          console.log("Data wrote into allThe files Successfully");
-          deleteFiles(dir);
+        if (filesCreated === numFiles) {
+          callback(null, directory);
         }
       }
     });
@@ -37,12 +35,11 @@ function createJsonFiles(dir, numFiles) {
 }
 
 //for files deleting
-function deleteFiles(dir) {
-  fs.readdir(dir, (error, filesList) => {
+function deleteFiles(directory, callback) {
+  fs.readdir(directory, (error, filesList) => {
     //directory reading
     if (error) {
-      console.error("Error while deleting the files");
-      console.log(error);
+      callback("Error while deleting the files", error.message);
     } else {
       if (filesList.length === 0) {
         console.log("No files Exist in the directory");
@@ -51,18 +48,18 @@ function deleteFiles(dir) {
       let deletedFilesCount = 0;
 
       filesList.forEach((file) => {
-        const filePath = path.join(dir, file);
+        const filePath = path.join(directory, file);
 
         fs.unlink(filePath, (error) => {
           //for files deleting
           if (error) {
-            console.error(`Error while deleting the file${file}`);
+            callback(`Error while deleting the file${file}`);
             console.log(error);
           } else {
             deletedFilesCount++;
             //to control on delete files  because it is asynchronous in nature
             if (deletedFilesCount === filesList.length) {
-              console.log("All the files are deleted");
+              callback(null, "All the files are deleted");
             }
           }
         });
@@ -70,4 +67,4 @@ function deleteFiles(dir) {
     }
   });
 }
-module.exports = makeDirectory;
+module.exports = { makeDirectory, createJsonFiles, deleteFiles };
