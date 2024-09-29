@@ -8,13 +8,13 @@
 
 import fs from "fs";
 import path from "path";
-function makeDirectory(directoryPath, numberOfFiles) {
+function makeDirectory(directoryPath) {
   return new Promise((resolve, reject) => {
     fs.mkdir(directoryPath, { recursive: true }, (error) => {
       if (error) {
         reject(error);
       } else {
-        resolve({ directoryPath, numberOfFiles });
+        resolve(directoryPath);
       }
     });
   });
@@ -27,7 +27,8 @@ function createJsonFiles(directoryPath, numberOfFiles) {
     for (let count = 0; count < numberOfFiles; count++) {
       let filePath = path.join(directoryPath, `file${count}.json`);
       let data = "this is created json file";
-      let task = new Promise((fileResolve, fileReject) => { //creating promises for each files
+
+      let task = new Promise((fileResolve, fileReject) => {
         fs.writeFile(filePath, data, (error) => {
           if (error) {
             fileReject(error);
@@ -40,7 +41,7 @@ function createJsonFiles(directoryPath, numberOfFiles) {
     }
     Promise.all(createdFiles)
       .then(() => resolve(directoryPath))
-      .catch(() => reject("All the files are not created"));
+      .catch((error) => reject("All the files are not created", error));
   });
 }
 
@@ -53,7 +54,8 @@ function deleteFiles(directoryPath) {
       } else {
         const deleteFiles = files.map((file) => {
           const filePath = path.join(directoryPath, file);
-           let task= new Promise((deleteResolve, deleteReject) => { //crating promises for each file
+
+          let task = new Promise((deleteResolve, deleteReject) => {
             fs.unlink(filePath, (error) => {
               if (error) {
                 deleteReject(error);
@@ -61,16 +63,12 @@ function deleteFiles(directoryPath) {
                 deleteResolve("File Deleted");
               }
             });
-           });
+          });
           return task;
         });
         Promise.all(deleteFiles)
-          .then(() => {
-            resolve("all the files are Deleted");
-          })
-          .catch(() => {
-            reject("All the files are not deleted");
-          });
+          .then(() => resolve("all the files are Deleted"))
+          .catch(() => reject("All the files are not deleted"));
       }
     });
   });

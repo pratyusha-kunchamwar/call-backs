@@ -10,7 +10,7 @@
 */
 
 import fs from "fs";
-import path, { resolve } from "path";
+import path from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -32,13 +32,13 @@ function readFile(filePath) {
 function contentToUpperCase(data) {
   return new Promise((resolve, reject) => {
     let upperCaseData = data.toUpperCase();
-    let newFile = "file1.txt";
+    let upperCaseDataFile = "upperCaseData.txt";
     let mainFile = "FileNames.txt";
     let mainFilePath = path.join(__dirname, mainFile);
 
-    createNewFile(newFile, upperCaseData)
-      .then(() => appendToFile(mainFilePath, newFile + "\n"))
-      .then(() => resolve({ newFile, mainFilePath }))
+    createNewFile(upperCaseDataFile, upperCaseData)
+      .then(() => appendToFile(mainFilePath, upperCaseDataFile + "\n"))
+      .then(() => resolve({ upperCaseDataFile, mainFilePath }))
       .catch((err) => reject("Error in content to upperCase"));
   });
 }
@@ -51,12 +51,12 @@ function contentToLowerCase(newFile, mainFilePath) {
     readFile(filePath)
       .then((data) => {
         let lowerCaseData = data.toLowerCase();
-        let sentences = lowerCaseData.split(".").filter(Boolean).join(".\n");
-        let newFile = "file2.txt";
+        let sentences = lowerCaseData.split(".").filter(Boolean).join(".");
+        let lowerCaseDataFile = "lowerCaseData.txt";
 
-        createNewFile(newFile, sentences) //create files
-          .then(() => appendToFile(mainFilePath, newFile + "\n"))
-          .then(() => resolve({ newFile, mainFilePath }))
+        createNewFile(lowerCaseDataFile, sentences) //create files
+          .then(() => appendToFile(mainFilePath, lowerCaseDataFile + "\n"))
+          .then(() => resolve({ lowerCaseDataFile, mainFilePath }))
           .catch(() => reject("Error from create file in lowerCase"));
       })
       .catch(() => {
@@ -72,10 +72,10 @@ function sortTheContent(newFile, mainFilePath) {
 
     readFile(filePath)
       .then((data) => {
-        let sortedData = data.split(" ").sort().filter(Boolean).join(" ");
-        let newFile = "file3.txt";
-        createNewFile(newFile, sortedData)
-          .then(() => appendToFile(mainFilePath, newFile + "\n"))
+        let sortedData = data.split(".").sort().filter(Boolean).join(".");
+        let sortedDataFile = "sortedData.txt";
+        createNewFile(sortedDataFile, sortedData)
+          .then(() => appendToFile(mainFilePath, sortedDataFile + "\n"))
           .then(() => resolve(mainFilePath))
           .catch(() => reject("Error in create file in sortContent"));
       })

@@ -19,13 +19,13 @@ readFile(filePath)
     console.log("SuccessFully File Reading");
     return contentToUpperCase(data);
   })
-  .then(({ newFile, mainFilePath }) => {
+  .then(({ upperCaseDataFile, mainFilePath }) => {
     console.log("Data converted to UpperCase");
-    return contentToLowerCase(newFile, mainFilePath);
+    return contentToLowerCase(upperCaseDataFile, mainFilePath);
   })
-  .then(({ newFile, mainFilePath }) => {
+  .then(({ lowerCaseDataFile, mainFilePath }) => {
     console.log("Data converted to lowerCase");
-    return sortTheContent(newFile, mainFilePath);
+    return sortTheContent(lowerCaseDataFile, mainFilePath);
   })
   .then((mainFilePath) => {
     console.log("Sorted the data");

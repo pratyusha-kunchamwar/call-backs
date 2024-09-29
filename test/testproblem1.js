@@ -1,19 +1,20 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import { makeDirectory, createJsonFiles, deleteTheFiles } from "../problem1.js";
+import { makeDirectory, createJsonFiles, deleteFiles } from "../problem1.js";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dirPath = path.join(__dirname, "./randomJsonFiles");
 
-makeDirectory(dirPath, 2)
-  .then(({ directoryPath, numberOfFiles }) => {
+makeDirectory(dirPath)
+  .then((directoryPath) => {
     console.log("directory Created Successfully");
-    return createJsonFiles(directoryPath, numberOfFiles);
+    return createJsonFiles(directoryPath,2);
   })
   .then((directoryPath) => {
     console.log("files are Created");
-    return deleteTheFiles(directoryPath);
+    return deleteFiles(directoryPath);
   })
   .then((message) => {
     console.log(message);
