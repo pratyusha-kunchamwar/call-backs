@@ -10,7 +10,7 @@
 */
 
 import fs from "fs/promises";
-import path, { resolve } from "path";
+import path from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
