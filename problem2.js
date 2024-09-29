@@ -44,9 +44,9 @@ function contentToUpperCase(data) {
 }
 
 //converting data to lowerCase
-function contentToLowerCase(newFile, mainFilePath) {
+function contentToLowerCase(upperCaseDataFile, mainFilePath) {
   return new Promise((resolve, reject) => {
-    let filePath = path.join(__dirname, newFile);
+    let filePath = path.join(__dirname, upperCaseDataFile);
 
     readFile(filePath)
       .then((data) => {
@@ -66,9 +66,9 @@ function contentToLowerCase(newFile, mainFilePath) {
 }
 
 //sorting the data
-function sortTheContent(newFile, mainFilePath) {
+function sortTheContent(lowerCaseDataFile, mainFilePath) {
   return new Promise((resolve, reject) => {
-    let filePath = path.join(__dirname, newFile);
+    let filePath = path.join(__dirname, lowerCaseDataFile);
 
     readFile(filePath)
       .then((data) => {
@@ -125,7 +125,7 @@ function createNewFile(file, content) {
   });
 }
 
-//append the files
+//append the fileNames
 function appendToFile(filePath, content) {
   return new Promise((resolve, reject) => {
     fs.appendFile(filePath, content, (error) => {
