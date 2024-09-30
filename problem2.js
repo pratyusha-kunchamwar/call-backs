@@ -49,8 +49,8 @@ function contentToUpperCase(data, callBack) {
 }
 
 //content to Lower case
-function contentToLowerCase(mainFile, newFile, callBack) {
-  let filePath = path.join(__dirname, newFile);
+function contentToLowerCase(mainFile, upperCaseData, callBack) {
+  let filePath = path.join(__dirname, upperCaseData);
   readFile(filePath, (error, data) => {
     if (error) {
       callBack(error);
@@ -75,8 +75,8 @@ function contentToLowerCase(mainFile, newFile, callBack) {
 }
 
 //sort the content
-function sortTheContent(mainFile, file, callBack) {
-  let filePath = path.join(__dirname, file);
+function sortTheContent(mainFile, lowerCaseData, callBack) {
+  let filePath = path.join(__dirname, lowerCaseData);
   readFile(filePath, (error, data) => {
     if (error) {
       callBack(error);
