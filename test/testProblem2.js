@@ -1,4 +1,4 @@
-const path=require('path')
+const path = require("path");
 const {
   readFile,
   contentToLowerCase,
@@ -10,47 +10,85 @@ const {
 
 // let currentPath = __dirname;
 let fileName = "lipsum.txt";
-let filepath=path.join(__dirname,fileName)
+let filepath = path.join(__dirname, fileName);
 
 //call backs
 
-readFile(filepath, (data) => {
-  console.log("file read successfully");
-  contentToUpperCase(data, (mainFile, upperCaseDataFile) => {
-    console.log("Data converted to upperCase");
-    storeData(mainFile, upperCaseDataFile, (mainFile, upperCaseDataFile) => {
-      console.log(`${upperCaseDataFile} name wrote in filenames.txt`);
-      contentToLowerCase(
-        mainFile,
-        upperCaseDataFile,
-        (mainFile, lowerCaseDataFile) => {
-          console.log("Data converted to LowerCase");
-          storeData(
-            mainFile,
-            lowerCaseDataFile,
-            (mainFile, lowerCaseDataFile) => {
-              console.log(`${lowerCaseDataFile} name wrote in filenames.txt`);
-              sortTheContent(
+readFile(filepath, (error, data) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log("file read successfully");
+    contentToUpperCase(data, (error, mainFile, upperCaseDataFile) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Data converted to upperCase");
+        storeData(
+          mainFile,
+          upperCaseDataFile,
+          (error, mainFile, upperCaseDataFile) => {
+            if (error) {
+              console.error(error);
+            } else {
+              console.log(`${upperCaseDataFile} name wrote in filenames.txt`);
+              contentToLowerCase(
                 mainFile,
-                lowerCaseDataFile,
-                (mainFile, sortedDataFile) => {
-                  console.log("Data is sorted");
-                  storeData(
-                    mainFile,
-                    sortedDataFile,
-                    (mainFile, sortedDataFile) => {
-                      console.log(
-                        `${sortedDataFile} name wrote in filenames.txt`
-                      );
-                      deleteFiles(mainFile)
-                    }
-                  );
+                upperCaseDataFile,
+                (error, mainFile, lowerCaseDataFile) => {
+                  if (error) {
+                    console.error(error);
+                  } else {
+                    console.log("Data converted to LowerCase");
+                    storeData(
+                      mainFile,
+                      lowerCaseDataFile,
+                      (error, mainFile, lowerCaseDataFile) => {
+                        if (error) {
+                          console.error(error);
+                        } else {
+                          console.log(
+                            `${lowerCaseDataFile} name wrote in filenames.txt`
+                          );
+                          sortTheContent(
+                            mainFile,
+                            lowerCaseDataFile,
+                            (error, mainFile, sortedDataFile) => {
+                              if (error) {
+                                console.error(error);
+                              } else {
+                                console.log("Data is sorted");
+                                storeData(
+                                  mainFile,
+                                  sortedDataFile,
+                                  (error, mainFile, sortedDataFile) => {
+                                    if (error) {
+                                      console.error(error);
+                                    } else {
+                                      console.log(
+                                        `${sortedDataFile} name wrote in filenames.txt`
+                                      );
+                                      deleteFiles(mainFile, (error) => {
+                                        if (error) {
+                                          console.error(error);
+                                        }
+                                      });
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          );
+                        }
+                      }
+                    );
+                  }
                 }
               );
             }
-          );
-        }
-      );
+          }
+        );
+      }
     });
-  });
+  }
 });
