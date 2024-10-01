@@ -7,7 +7,7 @@ function makeDirectory(directory, callback) {
     if (error) {
       callback("Error while Creating Directory", error.message);
     } else {
-      callback(null, directory);
+      callback(null);
     }
   });
 }
@@ -27,7 +27,7 @@ function createJsonFiles(directory, numFiles, callback) {
         filesCreated++;
         //to control on write files  because it is asynchronous in nature
         if (filesCreated === numFiles) {
-          callback(null, directory);
+          callback(null);
         }
       }
     });

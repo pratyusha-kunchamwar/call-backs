@@ -5,20 +5,20 @@ const {
   deleteFiles,
 } = require("../problem1.js");
 
-const absolutePath = path.join(__dirname, "jsonFiles");
+const directory = path.join(__dirname, "jsonFiles");
 let numberOfFiles = 2;
 
 //calling the functions
-makeDirectory(absolutePath, (error, directory) => {
+makeDirectory(directory, (error) => {
   if (error) {
     console.error(error);
   } else {
-    console.log("directory created successfully");
-    createJsonFiles(directory, numberOfFiles, (error, directory) => {
+    console.log("Directory created successfully");
+    createJsonFiles(directory, numberOfFiles, (error) => {
       if (error) {
         console.error(error);
       } else {
-        console.log("all the files are created successfully");
+        console.log("All the files are created successfully");
         deleteFiles(directory, (error, message) => {
           if (error) {
             console.error(error);
