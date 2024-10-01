@@ -35,11 +35,21 @@ function contentToUpperCase(data) {
     let upperCaseDataFile = "upperCaseData.txt";
     let mainFile = "FileNames.txt";
     let mainFilePath = path.join(__dirname, mainFile);
+    let filePath = path.join(__dirname, upperCaseDataFile);
 
-    createNewFile(upperCaseDataFile, upperCaseData)
-      .then(() => appendToFile(mainFilePath, upperCaseDataFile + "\n"))
-      .then(() => resolve({ upperCaseDataFile, mainFilePath }))
-      .catch((err) => reject("Error in content to upperCase"));
+    fs.writeFile(filePath, upperCaseData, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        fs.appendFile(mainFilePath, upperCaseDataFile + "\n", (error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve({ upperCaseDataFile, mainFilePath });
+          }
+        });
+      }
+    });
   });
 }
 
@@ -48,20 +58,30 @@ function contentToLowerCase(upperCaseDataFile, mainFilePath) {
   return new Promise((resolve, reject) => {
     let filePath = path.join(__dirname, upperCaseDataFile);
 
-    readFile(filePath)
-      .then((data) => {
+    fs.readFile(filePath, "utf-8", (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
         let lowerCaseData = data.toLowerCase();
         let sentences = lowerCaseData.split(".").filter(Boolean).join(".");
         let lowerCaseDataFile = "lowerCaseData.txt";
+        let filePath = path.join(__dirname, lowerCaseDataFile);
 
-        createNewFile(lowerCaseDataFile, sentences) //create files
-          .then(() => appendToFile(mainFilePath, lowerCaseDataFile + "\n"))
-          .then(() => resolve({ lowerCaseDataFile, mainFilePath }))
-          .catch(() => reject("Error from create file in lowerCase"));
-      })
-      .catch(() => {
-        reject("Error From readfile in LowerCase");
-      });
+        fs.writeFile(filePath, sentences, (error) => {
+          if (error) {
+            reject(error);
+          } else {
+            fs.appendFile(mainFilePath, lowerCaseDataFile + "\n", (error) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve({ lowerCaseDataFile, mainFilePath });
+              }
+            });
+          }
+        });
+      }
+    });
   });
 }
 
@@ -70,24 +90,38 @@ function sortTheContent(lowerCaseDataFile, mainFilePath) {
   return new Promise((resolve, reject) => {
     let filePath = path.join(__dirname, lowerCaseDataFile);
 
-    readFile(filePath)
-      .then((data) => {
+    fs.readFile(filePath, "utf-8", (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
         let sortedData = data.split(".").sort().filter(Boolean).join(".");
         let sortedDataFile = "sortedData.txt";
-        createNewFile(sortedDataFile, sortedData)
-          .then(() => appendToFile(mainFilePath, sortedDataFile + "\n"))
-          .then(() => resolve(mainFilePath))
-          .catch(() => reject("Error in create file in sortContent"));
-      })
-      .catch(() => reject("Error in read file sortContent"));
+        let filePath = path.join(__dirname, sortedDataFile);
+
+        fs.writeFile(filePath, sortedData, (error) => {
+          if (error) {
+            reject(error);
+          } else {
+            fs.appendFile(mainFilePath, sortedDataFile + "\n", (error) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(mainFilePath);
+              }
+            });
+          }
+        });
+      }
+    });
   });
 }
-
 //for deleting the files
 function deleteFiles(mainFilePath) {
   return new Promise((resolve, reject) => {
-    readFile(mainFilePath)
-      .then((data) => {
+    fs.readFile(mainFilePath, "utf-8", (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
         const fileNames = data.split("\n").filter(Boolean);
 
         const deletionFiles = fileNames.map((file) => {
@@ -103,40 +137,14 @@ function deleteFiles(mainFilePath) {
           });
           return task;
         });
-        Promise.all(deletionFiles)
-          .then(() => resolve("All files deleted successfully"))
-          .catch(reject);
-      })
-      .catch(() => reject("error in reading the files in delete function "));
-  });
-}
-
-//creating the files
-function createNewFile(file, content) {
-  return new Promise((resolve, reject) => {
-    let filePath = path.join(__dirname, file);
-    fs.writeFile(filePath, content, (error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve("Successfully File Created");
+        return Promise.all(deletionFiles)
+          .then(() => resolve("All files are deleted"))
+          .catch(() => reject("Error in deleting the files"));
       }
     });
   });
 }
 
-//append the fileNames
-function appendToFile(filePath, content) {
-  return new Promise((resolve, reject) => {
-    fs.appendFile(filePath, content, (error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
 //exporting the functions
 export {
   readFile,

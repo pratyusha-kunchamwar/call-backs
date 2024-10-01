@@ -6,7 +6,6 @@ import {
   contentToLowerCase,
   sortTheContent,
   deleteFiles,
-
 } from "../problem2.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -33,6 +32,7 @@ readFile(filePath)
   })
   .then((message) => {
     console.log(message);
+    return message;
   })
   .catch((error) => {
     console.error(error);

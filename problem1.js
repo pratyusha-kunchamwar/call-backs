@@ -6,6 +6,7 @@
         2. Delete those files simultaneously 
 */
 
+import { count } from "console";
 import fs from "fs";
 import path from "path";
 function makeDirectory(directoryPath) {
@@ -23,12 +24,13 @@ function makeDirectory(directoryPath) {
 //to create json files
 function createJsonFiles(directoryPath, numberOfFiles) {
   return new Promise((resolve, reject) => {
-    let createdFiles = [];
-    for (let count = 0; count < numberOfFiles; count++) {
-      let filePath = path.join(directoryPath, `file${count}.json`);
+    let createdFiles = new Array(numberOfFiles);
+
+    let createdFilesData = createdFiles.map((_, count) => {
+      const filePath = path.join(directoryPath, `file${count}.json`);
       let data = "this is created json file";
 
-      let task = new Promise((fileResolve, fileReject) => {
+      return new Promise((fileResolve, fileReject) => {
         fs.writeFile(filePath, data, (error) => {
           if (error) {
             fileReject(error);
@@ -37,9 +39,9 @@ function createJsonFiles(directoryPath, numberOfFiles) {
           }
         });
       });
-      createdFiles.push(task);
-    }
-    Promise.all(createdFiles)
+    });
+    //api to check all promises resolve
+    Promise.all(createdFilesData)
       .then(() => resolve(directoryPath))
       .catch((error) => reject("All the files are not created", error));
   });
@@ -66,7 +68,7 @@ function deleteFiles(directoryPath) {
           });
           return task;
         });
-        Promise.all(deleteFiles)
+        return Promise.all(deleteFiles)
           .then(() => resolve("all the files are Deleted"))
           .catch(() => reject("All the files are not deleted"));
       }
