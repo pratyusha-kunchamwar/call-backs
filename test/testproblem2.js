@@ -17,12 +17,12 @@ let fileName = "lipsum.txt";
 async function main() {
   try {
     let fileData = await readGivenFile(fileName, currentPath);
-    console.log("File Reading done successfully")
+    console.log("File Reading done successfully");
     let { upperCaseDataFile, mainFile } = await contentToUpperCase(
       fileData,
       currentPath
     );
-    console.log("Data is converted to uppercase")
+    console.log("Data is converted to uppercase");
     let { lowerCaseDataFile } = await contentToLowerCase(
       upperCaseDataFile,
       currentPath,
@@ -31,9 +31,9 @@ async function main() {
     console.log("Data is converted to lower Case");
 
     await sortTheContent(lowerCaseDataFile, currentPath, mainFile);
-    console.log("Data is sorted")
+    console.log("Data is sorted");
     await deleteFiles(mainFile, currentPath);
-    console.log("All the files got deleted")
+    console.log("All the files got deleted");
   } catch (error) {
     console.error("Error while code execution", error);
   }
