@@ -20,20 +20,20 @@ function makeDirectory(directoryPath) {
 
 //for create json files
 function createJsonFiles(directoryPath, numberOfFiles) {
-  let createdFiles = [];
-  for (let count = 0; count < numberOfFiles; count++) {
-    let filePath = path.join(directoryPath, `file${count}.json`);
-    createdFiles.push(
-      fs
-        .writeFile(filePath, "These are json files")
-        .then(() => {
-          console.log(`file${count} created`);
-        })
-        .catch((error) => console.error("Error in creating the file", error))
-    );
-  }
+  let createdFiles = new Array(numberOfFiles);
+
+  let createdFilesData = createdFiles.map((_, count) => {
+    const filePath = path.join(directoryPath, `file${count}.json`);
+    return fs
+      .writeFile(filePath, "These are json files")
+      .then(() => {
+        console.log(`file${count} created`);
+      })
+      .catch((error) => console.error("Error in creating the file", error));
+  });
+
   //api to check all the promises resolve
-  return Promise.all(createdFiles)
+  return Promise.all(createdFilesData)
     .then(() => {
       return directoryPath;
     })
