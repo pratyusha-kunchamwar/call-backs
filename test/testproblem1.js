@@ -18,7 +18,6 @@ makeDirectory(directoryPath)
   })
   .then((message) => {
     console.log(message);
-    return message;
   })
   .catch((error) => {
     console.error("Error: ", error);

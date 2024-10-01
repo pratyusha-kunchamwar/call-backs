@@ -41,7 +41,7 @@ function createJsonFiles(directoryPath, numberOfFiles) {
       });
     });
     //api to check all promises resolve
-    Promise.all(createdFilesData)
+    return Promise.all(createdFilesData)
       .then(() => resolve(directoryPath))
       .catch((error) => reject("All the files are not created", error));
   });

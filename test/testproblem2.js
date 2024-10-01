@@ -32,7 +32,6 @@ readFile(filePath)
   })
   .then((message) => {
     console.log(message);
-    return message;
   })
   .catch((error) => {
     console.error(error);
